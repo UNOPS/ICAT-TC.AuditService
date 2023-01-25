@@ -1,28 +1,31 @@
 import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { User } from 'src/users/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'audit' })
-export class Audit extends BaseTrackingEntity {
+export class Audit {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne((type) => User, { eager: true })
+ /*  @ManyToOne((type) => User, { eager: true })
   @JoinColumn()
-  user: User;
+  user: User; */
+
+  @Column()
+  logDate: string;
 
   @Column({ default: null })
   userName: string;
 
   @Column()
-  action: string;
-
-  @Column()
-  comment: string;
+  description: string;
 
   @Column()
   actionStatus: string;
 
   @Column()
   userType: string;
+
+  @Column()
+  uuId: string;
+
 }

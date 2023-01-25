@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Crud, CrudController } from '@nestjsx/crud';
 import * as moment from 'moment';
 import { audit } from 'rxjs';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Repository } from 'typeorm';
 import { AuditService } from './audit.service';
 import { AuditDto } from './dto/audit-dto';
@@ -26,6 +25,7 @@ import { Audit } from './entity/audit.entity';
       },
     },
   })
+
 @Controller('audit')
 export class AuditController implements CrudController<Audit> {
     constructor(public service: AuditService,
@@ -37,12 +37,12 @@ export class AuditController implements CrudController<Audit> {
         return this;
       }
 
-      @UseGuards(JwtAuthGuard)
+    //  @UseGuards(JwtAuthGuard)
       @Post()
       create(@Body() auditDto: AuditDto){
         return this.service.create(auditDto);
       }
-
+/* 
       @Get(
         'audit/auditinfo/:page/:limit/:userTypeId/:action/:editedOn/:filterText/:institutionId', 
       )
@@ -76,5 +76,6 @@ export class AuditController implements CrudController<Audit> {
           institutionId
         );
 
-      }
+      } */
 }
+

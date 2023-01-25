@@ -8,9 +8,6 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { Country } from 'src/country/entity/country.entity';
-import { Institution } from 'src/institution/institution.entity';
-import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
@@ -20,8 +17,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   contextUser: any;
   constructor(
     @InjectRepository(Audit) repo,
-    @InjectRepository(User)
-    private readonly userRepo : Repository<User>,
      @Inject(REQUEST) private request,
  
 
@@ -32,14 +27,14 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   async create(auditDto: AuditDto) {
     //To-do get user from context
    // const contextUser = "";
-    if(auditDto.userName!= undefined){
+  /*   if(auditDto.userName!= undefined){
       this.contextUser = auditDto.userName;
     }
     else{
       this.contextUser = this.request.user.username;
     }
     
-
+ */
    
    
 
@@ -48,29 +43,31 @@ export class AuditService extends TypeOrmCrudService<Audit> {
    
    
   //  console.log('============requset========', this.request);
-    console.log('============contextUser========', this.contextUser);
+  //  console.log('============contextUser========', this.contextUser);
     //To-do get user from context
-    let user = await this.userRepo.findOne({
+  /*   let user = await this.userRepo.findOne({
       where: { email: this.contextUser },
-    });
+    }); */
 
     
-    console.log("finduser---",user)
+  //  console.log("finduser---",user)
 
     let newAudit = new Audit();
-    newAudit.action = auditDto.action;
+    //newAudit.action = auditDto.action;
     newAudit.actionStatus = auditDto.actionStatus;
-    newAudit.comment = auditDto.comment;
+    newAudit.description = auditDto.description;
     // newAudit.createdBy = auditDto.createdBy;
     // newAudit.createdOn = auditDto.createdOn;
     // newAudit.editedBy = auditDto.editedBy;
     // newAudit.editedOn = auditDto.editedOn;
     // newAudit.id = auditDto.id;
     // newAudit.status= auditDto.status;
-    newAudit.user = user;
-    newAudit.userName = user.firstName;
+  //  newAudit.user = user;
+    newAudit.userName = auditDto.userName;
     //To-do save user role
-    newAudit.userType = user.userType.name;
+    newAudit.userType = auditDto.userType;
+    newAudit.uuId = auditDto.uuId;
+    newAudit.logDate = new Date().toLocaleString();
 
     var newaudit = await this.repo.save(newAudit);
   }
@@ -78,7 +75,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   
   
  
-
+/* 
   async getAuditDetails(
     options: IPaginationOptions,
     filterText: string,
@@ -144,8 +141,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
 
     let data = this.repo
       .createQueryBuilder('dr')
-      .leftJoinAndMapOne('dr.user', User, 'usr', 'usr.id = dr.userId')
-      .leftJoinAndMapOne('usr.institution', Institution, 'Institution', 'Institution.id = usr.institutionId')//userType.id 
+     // .leftJoinAndMapOne('dr.user', User, 'usr', 'usr.id = dr.userId')
+     // .leftJoinAndMapOne('usr.institution', Institution, 'Institution', 'Institution.id = usr.institutionId')//userType.id 
 
       // .innerJoinAndMapOne('dr.country', Country, 'coun', 'dr.countryId = coun.id')
 
@@ -168,5 +165,5 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     if (resualt) {
       return resualt;
     }
-  }
+  } */
 }
