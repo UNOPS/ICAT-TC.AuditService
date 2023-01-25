@@ -14,6 +14,7 @@ export class AuditDto {
   userType: string;
   uuId: string;
   logDate : string;
+  institutionId : number
  // comment: string;
 
 }

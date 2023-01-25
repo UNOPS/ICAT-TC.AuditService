@@ -8,162 +8,149 @@ import {
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
 
 @Injectable()
 export class AuditService extends TypeOrmCrudService<Audit> {
   contextUser: any;
-  constructor(
-    @InjectRepository(Audit) repo,
-     @Inject(REQUEST) private request,
- 
-
-  ) {
+  constructor(@InjectRepository(Audit) repo, @Inject(REQUEST) private request) {
     super(repo);
   }
 
   async create(auditDto: AuditDto) {
-    //To-do get user from context
-   // const contextUser = "";
-  /*   if(auditDto.userName!= undefined){
-      this.contextUser = auditDto.userName;
-    }
-    else{
-      this.contextUser = this.request.user.username;
-    }
-    
- */
-   
-   
+    auditDto.logDate = new Date().toLocaleString();
 
-  //  let user = await this.userRepo.findOne(40);
-  
-   
-   
-  //  console.log('============requset========', this.request);
-  //  console.log('============contextUser========', this.contextUser);
-    //To-do get user from context
-  /*   let user = await this.userRepo.findOne({
-      where: { email: this.contextUser },
-    }); */
-
-    
-  //  console.log("finduser---",user)
-
-    let newAudit = new Audit();
-    //newAudit.action = auditDto.action;
-    newAudit.actionStatus = auditDto.actionStatus;
-    newAudit.description = auditDto.description;
-    // newAudit.createdBy = auditDto.createdBy;
-    // newAudit.createdOn = auditDto.createdOn;
-    // newAudit.editedBy = auditDto.editedBy;
-    // newAudit.editedOn = auditDto.editedOn;
-    // newAudit.id = auditDto.id;
-    // newAudit.status= auditDto.status;
-  //  newAudit.user = user;
-    newAudit.userName = auditDto.userName;
-    //To-do save user role
-    newAudit.userType = auditDto.userType;
-    newAudit.uuId = auditDto.uuId;
-    newAudit.logDate = new Date().toLocaleString();
-
-    var newaudit = await this.repo.save(newAudit);
+    var newaudit = await this.repo.save(auditDto);
   }
- 
+
   
   
- 
-/* 
-  async getAuditDetails(
-    options: IPaginationOptions,
-    filterText: string,
-    userTypeId: string,
-    action: string,
-    editedOn: string,
-    institutionId:number
-  ): Promise<Pagination<Audit>> {
-    let filter: string = '';
-    // let fDate = `${editedOn.getFullYear()}-${editedOn.getMonth()+1}-${editedOn.getDate()}`;
-
-    if (filterText != null && filterText != undefined && filterText != '') {
-      filter =
-        // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
-        '(dr.userName LIKE :filterText OR dr.action LIKE :filterText OR dr.actionStatus LIKE :filterText OR dr.editedOn LIKE :filterText)';
-    }
-
-    if (userTypeId != null && userTypeId != undefined && userTypeId != '') {
-      if (filter) {
-        filter = `${filter}  and dr.userType= :userTypeId`;
-      } else {
-        filter = `dr.userType = :userTypeId`;
-      }
-    }
-    if (editedOn != null && editedOn != undefined && editedOn != '') {
-      if (filter) {
+    async getAuditDetails(
+      options: IPaginationOptions,
+      filterText: string,
+      uuId: string,
+      actionStatus: string,
+      logDate: string,
+      description : string,
+      userType : string,
+      userName : string,
+      institutionId:number
+    ): Promise<Pagination<Audit>> {
+      let filter: string = '';
+      // let fDate = `${editedOn.getFullYear()}-${editedOn.getMonth()+1}-${editedOn.getDate()}`;
+  
+      if (filterText != null && filterText != undefined && filterText != '') {
         filter =
           // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
-          `${filter}  and(  dr.editedOn LIKE :editedOn)`;
-      } else filter = '( dr.editedOn LIKE :editedOn)';
-    }
+          '(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )';
+      }
+  
+      if (uuId != null && uuId != undefined && uuId != '') {
+        if (filter) {
+          filter = `${filter}  and dr.uuId= :uuId`;
+        } else {
+          filter = `dr.uuId = :uuId`;
+        }
+      }
+    
 
-    if (action != null && action != undefined && action != '') {
-      if (filter) {
-        filter = `${filter}  and dr.actionStatus = :action`;
-      } else {
-        filter = `dr.actionStatus = :action`;
+      if (actionStatus != null && actionStatus != undefined && actionStatus != '') {
+        if (filter) {
+          filter = `${filter}  and dr.actionStatus= :actionStatus`;
+        } else {
+          filter = `dr.actionStatus = :actionStatus`;
+        }
+      }
+      if (logDate != null && logDate != undefined && logDate != '') {
+        if (filter) {
+          filter =
+            `${filter}  and(  dr.logDate LIKE :logDate)`;
+        } else filter = '( dr.logDate LIKE :logDate)';
+      }
+  
+      if (description != null && description != undefined && description != '') {
+        if (filter) {
+          filter = `${filter}  and dr.description LIKE :description`;
+        } else {
+          filter = `dr.description LIKE :description`;
+        }
+  
+      }
+  
+      if (userType != null && userType != undefined && userType != '') {
+  
+        if (filter) {
+          filter = `${filter}  and dr.userType = :userType`;
+        } else {
+          filter = `dr.userType = :userType`;
+        }
+      }
+      
+      if (userName != null && userName != undefined && userName != '') {
+  
+        if (filter) {
+          filter = `${filter}  and dr.userName LIKE :userName`;
+        } else {
+          filter = `dr.userName LIKE :userName`;
+        }
       }
 
-    }
 
-    if (institutionId != null && institutionId != undefined ) {
+  
+      if (institutionId != null && institutionId != undefined ) {
+  
+        // let user = await this.userRepo.findOne({
+        //   where: { email: },
+        // });
+  
+        if (filter) {
+          filter = `${filter}  and dr.institutionId = :institutionId`;
+        } else {
+          filter = `dr.institutionId = :institutionId`;
+        }
+      }
+      // if (editedOn != null && editedOn != undefined && editedOn != '') {
+      //     if (filter) {
+      //      let editdate = `dr.editedOn`;
+      //      console.log('mmm','dr.editedOn')
+      //       filter = `${filter}  and (dr.editedOn LIKE :editedOn)`;
+      //     } else {
+      //       filter = `dr.editedOn = :editedOn`;
+      //     }
+      //   }
+  
+      let data = this.repo
+        .createQueryBuilder('dr')
+   
+  
+        // .innerJoinAndMapOne('dr.country', Country, 'coun', 'dr.countryId = coun.id')
+  
+        .where(filter, {
+          filterText: `%${filterText}%`,
+          uuId,
+          actionStatus,
+          logDate: `%${logDate}%`,
+          description,
+          userType,
+          userName,
+          institutionId
 
-      // let user = await this.userRepo.findOne({
-      //   where: { email: },
-      // });
-
-      if (filter) {
-        filter = `${filter}  and Institution.id= :institutionId`;
-      } else {
-        filter = `Institution.id= :institutionId`;
+        })
+        .orderBy('dr.logDate', 'DESC');
+      // console.log(
+      //   '=====================================================================',
+      // );
+      // console.log(`dr.editedOn`);
+  
+      let result = await paginate(data, options);
+      // console.log("rrrrrrr----",resualt.items[1].user.institution)
+  
+      if (result) {
+        return result;
       }
     }
-    // if (editedOn != null && editedOn != undefined && editedOn != '') {
-    //     if (filter) {
-    //      let editdate = `dr.editedOn`;
-    //      console.log('mmm','dr.editedOn')
-    //       filter = `${filter}  and (dr.editedOn LIKE :editedOn)`;
-    //     } else {
-    //       filter = `dr.editedOn = :editedOn`;
-    //     }
-    //   }
+  }
+  
 
-    let data = this.repo
-      .createQueryBuilder('dr')
-     // .leftJoinAndMapOne('dr.user', User, 'usr', 'usr.id = dr.userId')
-     // .leftJoinAndMapOne('usr.institution', Institution, 'Institution', 'Institution.id = usr.institutionId')//userType.id 
-
-      // .innerJoinAndMapOne('dr.country', Country, 'coun', 'dr.countryId = coun.id')
-
-      .where(filter, {
-        filterText: `%${filterText}%`,
-        userTypeId,
-        action,
-        editedOn: `%${editedOn}%`,
-        institutionId
-      })
-      .orderBy('dr.createdOn', 'DESC');
-    // console.log(
-    //   '=====================================================================',
-    // );
-    // console.log(`dr.editedOn`);
-
-    let resualt = await paginate(data, options);
-    // console.log("rrrrrrr----",resualt.items[1].user.institution)
-
-    if (resualt) {
-      return resualt;
-    }
-  } */
-}

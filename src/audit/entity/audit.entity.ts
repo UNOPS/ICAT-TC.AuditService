@@ -28,4 +28,7 @@ export class Audit {
   @Column()
   uuId: string;
 
+  @Column()
+  institutionId: number;
+
 }
