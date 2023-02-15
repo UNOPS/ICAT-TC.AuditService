@@ -41,6 +41,7 @@ const config: ConnectionOptions = {
   logging: true,
   logger: 'file',
 
+
   // Allow both start:prod and start:dev to use migrations
   // __dirname is either dist or src folder, meaning either
   // the compiled js in prod or the ts in dev.

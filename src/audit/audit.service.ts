@@ -3,6 +3,7 @@ import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CrudRequest, GetManyDefaultResponse, Override } from '@nestjsx/crud';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
+import { timeStamp } from 'console';
 import {
   IPaginationOptions,
   paginate,
@@ -20,22 +21,33 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   }
 
   async create(auditDto: AuditDto) {
-    auditDto.logDate = new Date().toLocaleString();
+let  date  = new Date()
 
-    var newaudit = await this.repo.save(auditDto);
-  }
+  const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+    let y = `${year}-${month}-${day}`;
+
+    auditDto.logTime = new Date().toLocaleTimeString();
 
   
+
+ console.log("dateeeee")
+    console.log(y)
+
+     
+    auditDto.logDate = y
+    var newaudit = await this.repo.save(auditDto);
+    return newaudit
+  }
+
   
     async getAuditDetails(
       options: IPaginationOptions,
       filterText: string,
-      uuId: string,
+      userType : string,
       actionStatus: string,
       logDate: string,
-      description : string,
-      userType : string,
-      userName : string,
       institutionId:number
     ): Promise<Pagination<Audit>> {
       let filter: string = '';
@@ -46,14 +58,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
           // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
           '(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )';
       }
-  
-      if (uuId != null && uuId != undefined && uuId != '') {
-        if (filter) {
-          filter = `${filter}  and dr.uuId= :uuId`;
-        } else {
-          filter = `dr.uuId = :uuId`;
-        }
-      }
+
     
 
       if (actionStatus != null && actionStatus != undefined && actionStatus != '') {
@@ -70,14 +75,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
         } else filter = '( dr.logDate LIKE :logDate)';
       }
   
-      if (description != null && description != undefined && description != '') {
-        if (filter) {
-          filter = `${filter}  and dr.description LIKE :description`;
-        } else {
-          filter = `dr.description LIKE :description`;
-        }
-  
-      }
   
       if (userType != null && userType != undefined && userType != '') {
   
@@ -87,16 +84,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
           filter = `dr.userType = :userType`;
         }
       }
-      
-      if (userName != null && userName != undefined && userName != '') {
-  
-        if (filter) {
-          filter = `${filter}  and dr.userName LIKE :userName`;
-        } else {
-          filter = `dr.userName LIKE :userName`;
-        }
-      }
-
 
   
       if (institutionId != null && institutionId != undefined ) {
@@ -111,6 +98,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
           filter = `dr.institutionId = :institutionId`;
         }
       }
+      
       // if (editedOn != null && editedOn != undefined && editedOn != '') {
       //     if (filter) {
       //      let editdate = `dr.editedOn`;
@@ -129,14 +117,10 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   
         .where(filter, {
           filterText: `%${filterText}%`,
-          uuId,
           actionStatus,
           logDate: `%${logDate}%`,
-          description,
           userType,
-          userName,
           institutionId
-
         })
         .orderBy('dr.logDate', 'DESC');
       // console.log(

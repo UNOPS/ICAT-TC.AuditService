@@ -13,6 +13,9 @@ export class Audit {
   @Column()
   logDate: string;
 
+  @Column()
+  logTime: string;
+
   @Column({ default: null })
   userName: string;
 
@@ -22,13 +25,13 @@ export class Audit {
   @Column()
   actionStatus: string;
 
-  @Column()
+  @Column({ default: null })
   userType: string;
 
-  @Column()
+  @Column({ default: null })
   uuId: string;
 
-  @Column()
+  @Column({ default: null })
   institutionId: number;
 
 }

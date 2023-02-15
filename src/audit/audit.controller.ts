@@ -39,6 +39,7 @@ export class AuditController implements CrudController<Audit> {
 
       @Post()
       create(@Body() auditDto: AuditDto){
+        console.log("Post request")
         return this.service.create(auditDto);
       }
 /*  
@@ -103,30 +104,26 @@ export class AuditController implements CrudController<Audit> {
         );
       } */
 
-
       @Get(
-        'audit/auditinfo/:page/:limit/:uuId/:actionStatus/:logDate/:description/:userType/:userName/:filterText/:institutionId', 
+        'audit/auditinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId', 
       )
       async getAuditDetails(
         @Query('page') page: number,
         @Query('limit') limit: number,
-         @Query('uuId') uuId: string,
+         @Query('userType') userType: string,
          @Query('actionStatus') actionStatus: string,
         @Query('logDate') logDate: string,
-        @Query('description') description: string,
-        @Query('userType') userType:string,
-       @Query('userName') userName:string,
         @Query('filterText') filterText: string,
         @Query('institutionId') institutionId:number
         
       ): Promise<any> {
-        
+      
        //let editedOnnew= moment(editedOn, "DD/MM/YYYY");
-       
+       console.log("hitttttttt : "+ logDate)
        var timestamp = Date.parse(logDate);
       var dateObject = new Date(timestamp);
       
-      console.log('jjjjjjfffff',moment(logDate,'YYYY-MM-DD').format('YYYY-MM-DD'));
+      console.log('jjjjjjfffff',moment(logDate,'MM-DD-YYYY').format('MM-DD-YYYY'));
       console.log('hhh',logDate)
         return await this.service.getAuditDetails(
           {
@@ -134,16 +131,16 @@ export class AuditController implements CrudController<Audit> {
             page: page,
           },
           filterText,
-          uuId,
+          userType,
           actionStatus,
           logDate,
-          description,
-          userType,
-          userName,
           institutionId,
         );
 
       }
+
+
+    
 
 }
 
