@@ -8,9 +8,14 @@ export class AuditDto {
   // status: RecordStatus;
   //id: number;
   userName: string;
-  action: string;
+  description: string;
+ // action: string;
   actionStatus: string;
   userType: string;
-  //userId: number;
-  comment: string;
+  uuId: string;
+  logDate : string;
+  logTime: string;
+  institutionId : number
+ // comment: string;
+
 }

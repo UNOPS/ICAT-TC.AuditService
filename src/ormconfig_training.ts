@@ -25,14 +25,16 @@ const config: ConnectionOptions = {
   type: 'mysql',
   host: 'localhost',
   port: 3306,
-  username: 'root',
-  password: 'pradeep123#',
+ // username: 'root',
+ // password: 'pradeep123#',
+ username : 'sqluser',
+ password : 'password',
   database: 'icat_pmu',
   
   entities: [__dirname + '/**/*.entity{.ts,.js}'], 
 
   // We are using migrations, synchronize should be set to false.
-  synchronize: false,
+  synchronize: true,
 
   // Run migrations automatically,
   // you can disable this if you prefer running migration manually.
@@ -40,6 +42,7 @@ const config: ConnectionOptions = {
   logging: true,
   logger: 'file',
 
+  
   // Allow both start:prod and start:dev to use migrations
   // __dirname is either dist or src folder, meaning either
   // the compiled js in prod or the ts in dev.
