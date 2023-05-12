@@ -45,7 +45,7 @@ export class AuditController implements CrudController<Audit> {
 
       @Post('createCountry')
       createCountry(@Body() auditDto: AuditDto){
-        console.log("Post request :", auditDto)
+        console.log("Post request  :", auditDto)
         return this.service.createCountry(auditDto);
       }
 /*  
