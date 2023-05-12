@@ -20,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { ErrorlogModule } from './errorlog/errorlog.module';
+import { AuditCountry } from './audit/entity/auditCountry.entity';
 
 
 @Module({
@@ -29,6 +30,7 @@ import { ErrorlogModule } from './errorlog/errorlog.module';
     TypeOrmModule.forRoot(ormconfig_training),
     TypeOrmModule.forFeature([
       Audit,
+      AuditCountry
     ]),
 
     AuditModule,

@@ -42,6 +42,12 @@ export class AuditController implements CrudController<Audit> {
         console.log("Post request")
         return this.service.create(auditDto);
       }
+
+      @Post('createCountry')
+      createCountry(@Body() auditDto: AuditDto){
+        console.log("Post request :", auditDto)
+        return this.service.createCountry(auditDto);
+      }
 /*  
       @Get(
         'audit/auditinfo/:page/:limit/:uuId/:actionStatus/:logDate/:description/:userType/:userName', 
@@ -139,6 +145,42 @@ export class AuditController implements CrudController<Audit> {
 
       }
 
+
+      @Get(
+        'audit/auditCountryinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId', 
+      )
+      async getAuditDetailsCountry(
+        @Query('page') page: number,
+        @Query('limit') limit: number,
+         @Query('userType') userType: string,
+         @Query('actionStatus') actionStatus: string,
+        @Query('logDate') logDate: string,
+        @Query('filterText') filterText: string,
+        @Query('institutionId') institutionId:number
+        
+      ): Promise<any> {
+      
+       //let editedOnnew= moment(editedOn, "DD/MM/YYYY");
+       console.log("hitttttttt : "+ logDate)
+       var timestamp = Date.parse(logDate);
+      var dateObject = new Date(timestamp);
+      
+      
+      console.log('jjjjjjfffff',moment(logDate,'MM-DD-YYYY').format('MM-DD-YYYY'));
+      console.log('hhh',logDate)
+        return await this.service.getAuditDetailsCountry(
+          {
+            limit: limit,
+            page: page,
+          },
+          filterText,
+          userType,
+          actionStatus,
+          logDate,
+          institutionId,
+        );
+
+      }
 
     
 
