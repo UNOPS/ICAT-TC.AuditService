@@ -27,9 +27,9 @@ const config: ConnectionOptions = {
   port: 3306,
  // username: 'root',
   //password: 'pradeep123#',
-  username : 'sqluser',
-  password : 'password',
-  database: 'icat_pmu',
+  username: 'root',
+  password: 'pradeep123#',
+  database: 'tc-audit',  
   entities: [__dirname + '/**/*.entity{.ts,.js}'], 
 
   // We are using migrations, synchronize should be set to false.

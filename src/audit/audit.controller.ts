@@ -147,7 +147,7 @@ export class AuditController implements CrudController<Audit> {
 
 
       @Get(
-        'audit/auditCountryinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId', 
+        'audit/auditCountryinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId/:countryId/:loginusertype', 
       )
       async getAuditDetailsCountry(
         @Query('page') page: number,
@@ -156,18 +156,14 @@ export class AuditController implements CrudController<Audit> {
          @Query('actionStatus') actionStatus: string,
         @Query('logDate') logDate: string,
         @Query('filterText') filterText: string,
-        @Query('institutionId') institutionId:number
-        
+        @Query('institutionId') institutionId:number,
+        @Query('countryId') countryId:number,
+        @Query('loginusertype') loginusertype:string,
       ): Promise<any> {
       
-       //let editedOnnew= moment(editedOn, "DD/MM/YYYY");
-       console.log("hitttttttt : "+ logDate)
        var timestamp = Date.parse(logDate);
       var dateObject = new Date(timestamp);
-      
-      
-      console.log('jjjjjjfffff',moment(logDate,'MM-DD-YYYY').format('MM-DD-YYYY'));
-      console.log('hhh',logDate)
+
         return await this.service.getAuditDetailsCountry(
           {
             limit: limit,
@@ -178,6 +174,8 @@ export class AuditController implements CrudController<Audit> {
           actionStatus,
           logDate,
           institutionId,
+          countryId,
+          loginusertype
         );
 
       }
