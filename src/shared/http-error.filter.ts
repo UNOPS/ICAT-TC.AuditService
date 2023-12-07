@@ -49,16 +49,9 @@ import {
         );
       }
   
-      //response.status(status).json(errorResponse);
-      console.log("Error dara : ")
       let x :any
-      x = response.status(status).json(errorResponse)
-      console.log("xxxxx")
-     console.log(errorResponse)
+      x = response.status(status).json(errorResponse);
 
-      let pp = this.errorlogService.create(errorResponse)
-
-      console.log("pppp")
-      console.log(pp)
+      let pp = this.errorlogService.create(errorResponse);
     }
   }

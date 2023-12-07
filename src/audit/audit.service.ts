@@ -1,15 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CrudRequest, GetManyDefaultResponse, Override } from '@nestjsx/crud';
 import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { timeStamp } from 'console';
 import {
   IPaginationOptions,
   paginate,
   Pagination,
 } from 'nestjs-typeorm-paginate';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
 import { AuditCountry } from './entity/auditCountry.entity';
@@ -32,8 +30,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
 
     auditDto.logTime = new Date().toLocaleTimeString();
 
-    console.log("dateeeee")
-    console.log(y)
     auditDto.logDate = y
     var newaudit = await this.repo.save(auditDto);
     return newaudit
@@ -49,11 +45,9 @@ export class AuditService extends TypeOrmCrudService<Audit> {
 
     auditDto.logTime = new Date().toLocaleTimeString();
 
-    console.log("dateeeee")
-    console.log(y)
-    auditDto.logDate = y
+    auditDto.logDate = y;
     var newaudit = await this.auditCountryRepo.save(auditDto);
-    return newaudit
+    return newaudit;
   }
 
   async getAuditDetails(
@@ -65,11 +59,9 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     institutionId: number
   ): Promise<Pagination<Audit>> {
     let filter: string = '';
-    // let fDate = `${editedOn.getFullYear()}-${editedOn.getMonth()+1}-${editedOn.getDate()}`;
 
     if (filterText != null && filterText != undefined && filterText != '') {
       filter =
-        // '(dr.climateActionName LIKE :filterText OR dr.description LIKE :filterText)';
         '(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )';
     }
 
@@ -102,10 +94,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
 
     if (institutionId != null && institutionId != undefined) {
 
-      // let user = await this.userRepo.findOne({
-      //   where: { email: },
-      // });
-
       if (filter) {
         filter = `${filter}  and dr.institutionId = :institutionId`;
       } else {
@@ -113,21 +101,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       }
     }
 
-    // if (editedOn != null && editedOn != undefined && editedOn != '') {
-    //     if (filter) {
-    //      let editdate = `dr.editedOn`;
-    //      console.log('mmm','dr.editedOn')
-    //       filter = `${filter}  and (dr.editedOn LIKE :editedOn)`;
-    //     } else {
-    //       filter = `dr.editedOn = :editedOn`;
-    //     }
-    //   }
-
     let data = this.repo
       .createQueryBuilder('dr')
-
-
-      // .innerJoinAndMapOne('dr.country', Country, 'coun', 'dr.countryId = coun.id')
 
       .where(filter, {
         filterText: `%${filterText}%`,
@@ -137,13 +112,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
         institutionId
       })
       .orderBy('dr.logDate', 'DESC');
-    // console.log(
-    //   '=====================================================================',
-    // );
-    // console.log(`dr.editedOn`);
 
     let result = await paginate(data, options);
-    // console.log("rrrrrrr----",resualt.items[1].user.institution)
 
     if (result) {
       return result;
@@ -161,7 +131,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     loginusertype: string
   ): Promise<Pagination<Audit>> {
     let filter: string = '';
-    // let fDate = `${editedOn.getFullYear()}-${editedOn.getMonth()+1}-${editedOn.getDate()}`;
 
 
     if (filterText != null && filterText != undefined && filterText != '') {
@@ -284,7 +253,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       }
     }
 
-    console.log(filter)
     let data = this.auditCountryRepo
       .createQueryBuilder('dr')
       .where(filter, {
@@ -298,7 +266,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       .orderBy('dr.logDate', 'DESC');
 
     let result = await paginate(data, options);
-    console.log(result.items.length)
     return result;
   }
 

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateErrorlogDto } from './dto/create-errorlog.dto';
 import { UpdateErrorlogDto } from './dto/update-errorlog.dto';
 import {Errorlog} from './entities/errorlog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +12,6 @@ export class ErrorlogService extends TypeOrmCrudService <Errorlog>{
    }
 
   create(createErrorDto: Errorlog) {
-    console.log("Hit   :")
     this.exp2 = {
       code : createErrorDto.code,
       logdate : createErrorDto.logdate,
