@@ -14,9 +14,6 @@ import { ConfigModule } from '@nestjs/config';
 
 import { MailerModule } from '@nestjs-modules/mailer';
 
-// import { UserController } from './user/user.controller';
-// import { UserService } from './user/user.service';
-
 import { APP_FILTER } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
 import { ErrorlogModule } from './errorlog/errorlog.module';
@@ -44,23 +41,6 @@ import { AuditCountry } from './audit/entity/auditCountry.entity';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MailerModule.forRoot({
-      transport:{
-        host: 'smtp.office365.com', 
-        port:587,
-       secure: false, 
-       
-       auth: {
-        user: "no-reply-icat-ca-tool@climatesi.com",
-        pass: "ICAT2022tool",
-
-      },
-        // 'smtp://janiya.rolfson49@ethereal.email:T8pnMS7xzzX7k3QSkM@ethereal.email',
-      },
-      defaults: {
-        from: '"Admin" <no-reply-icat-ca-tool@climatesi.com>',
-      },
-    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
@@ -69,8 +49,6 @@ import { AuditCountry } from './audit/entity/auditCountry.entity';
   ],
   controllers: [
     AppController,
-    // InstitutionCategoryController,
-    // UserController,
   ],
   providers: [AppService,
   {

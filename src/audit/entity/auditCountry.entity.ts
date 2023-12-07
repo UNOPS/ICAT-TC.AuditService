@@ -34,4 +34,6 @@ export class AuditCountry {
   @Column({ default: null })
   institutionId: number;
 
+  @Column({ default: null })
+  countryId: number;
 }
