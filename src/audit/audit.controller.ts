@@ -93,7 +93,7 @@ export class AuditController implements CrudController<Audit> {
        var timestamp = Date.parse(logDate);
       var dateObject = new Date(timestamp);
 
-        return await this.service.getAuditDetailsCountry(
+        return await this.service.getAuditDetailsWithCountry(
           {
             limit: limit,
             page: page,
