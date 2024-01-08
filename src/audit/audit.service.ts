@@ -11,6 +11,8 @@ import { Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
 import { AuditCountry } from './entity/auditCountry.entity';
+import { filter } from 'rxjs';
+import { UserTypes, UserTypesEnum } from './enum/user-type.enum';
 
 @Injectable()
 export class AuditService extends TypeOrmCrudService<Audit> {
@@ -120,6 +122,76 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     }
   }
 
+  /**
+   * 
+   *country admin -> country admin, country user
+   country user -> country user
+   external user -> external user
+   master admin -> country admin, country user, master admin
+   */
+  async getAuditDetailsWithCountry(
+    options: IPaginationOptions,
+    filterText: string,
+    userType: string,
+    description: string,
+    logDate: string,
+    institutionId: number,
+    countryId: number,
+    loginusertype: string
+  ): Promise<Pagination<Audit>> {
+    let data = this.auditCountryRepo
+      .createQueryBuilder('dr')
+      .orderBy('dr.logDate', 'DESC');
+    if (filterText != null && filterText != undefined && filterText != '') {
+      data.andWhere('(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )', { filterText: `%${filterText}%` })
+    }
+    if (description != null && description != undefined && description != '') {
+      data.andWhere('dr.description = :description', { description: description })
+    }
+    if (logDate != null && logDate != undefined && logDate != '') {
+      data.andWhere('dr.logDate LIKE :logDate', { logDate: logDate })
+    }
+
+    if (userType == null || userType || undefined || userType == '') {
+      let type = UserTypes.find(o => o.name === loginusertype)
+      if (type) {
+        loginusertype = type.code
+      }
+
+      let allowedTypes: UserTypesEnum[]
+      if (loginusertype === UserTypesEnum.COUNTRY_ADMIN) {
+        allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_ADMIN, UserTypesEnum.COUNTRY_USER].includes(type.code))
+          .map(type => type.code);
+      } else if (loginusertype === UserTypesEnum.COUNTRY_USER) {
+        allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_USER].includes(type.code))
+          .map(type => type.code);
+      } else if (loginusertype === UserTypesEnum.MASTER_ADMIN) {
+        allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_ADMIN, UserTypesEnum.COUNTRY_USER, UserTypesEnum.MASTER_ADMIN].includes(type.code))
+          .map(type => type.code);
+      } else if (loginusertype === UserTypesEnum.EXTERNAL) {
+        UserTypes.filter(type => [UserTypesEnum.EXTERNAL].includes(type.code))
+          .map(type => type.code);
+      }
+      data.andWhere('dr.userType IN (:types)', { types: allowedTypes })
+    }
+
+    if (userType != null && userType != undefined && userType != '') {
+      data.andWhere('dr.userType = :userType', { userType: userType })
+    }
+
+    if (loginusertype != UserTypesEnum.MASTER_ADMIN && countryId != null && countryId != undefined) {
+      data.andWhere('dr.countryId = :countryId', { countryId: countryId })
+    }
+
+    if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
+      data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
+    }
+
+    let result = await paginate(data, options);
+    return result;
+  }
+
+  /**Not using function */
   async getAuditDetailsCountry(
     options: IPaginationOptions,
     filterText: string,

@@ -9,5 +9,6 @@ export class AuditDto {
   logDate : string;
   logTime: string;
   institutionId : number;
+  countryId: number;
 
 }
