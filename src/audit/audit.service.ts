@@ -141,7 +141,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
   ): Promise<Pagination<Audit>> {
     let data = this.auditCountryRepo
       .createQueryBuilder('dr')
-      .orderBy('dr.logDate', 'DESC');
+      .orderBy('dr.logDate', 'DESC')
+      .orderBy('dr.logTime', 'DESC')
     if (filterText != null && filterText != undefined && filterText != '') {
       data.andWhere('(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )', { filterText: `%${filterText}%` })
     }
@@ -187,6 +188,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     //   data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
     // }
 
+    console.log(data.getQuery(), data.getParameters())
+    console.log(JSON.stringify(data.getMany()))
     let result = await paginate(data, options);
     return result;
   }
