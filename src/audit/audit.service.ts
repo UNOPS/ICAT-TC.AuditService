@@ -183,9 +183,9 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       data.andWhere('dr.countryId = :countryId', { countryId: countryId })
     }
 
-    if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
-      data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
-    }
+    // if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
+    //   data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
+    // }
 
     let result = await paginate(data, options);
     return result;
