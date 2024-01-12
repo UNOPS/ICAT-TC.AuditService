@@ -6,6 +6,8 @@ import * as moment from 'moment';
 import { AuditService } from './audit.service';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
+import { Pagination } from 'nestjs-typeorm-paginate';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Crud({
     model: {
@@ -76,8 +78,9 @@ export class AuditController implements CrudController<Audit> {
 
 
       @Get(
-        'audit/auditCountryinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId/:countryId/:loginusertype', 
+        'audit/auditCountryinfo/:page/:limit/:userType/:actionStatus/:logDate/:filterText/:institutionId/:countryId/:loginusertype/:userName', 
       )
+      @ApiResponse({type: Pagination<Audit>})
       async getAuditDetailsCountry(
         @Query('page') page: number,
         @Query('limit') limit: number,
@@ -88,6 +91,7 @@ export class AuditController implements CrudController<Audit> {
         @Query('institutionId') institutionId:number,
         @Query('countryId') countryId:number,
         @Query('loginusertype') loginusertype:string,
+        @Query('userName') userName?: string,
       ): Promise<any> {
       
        var timestamp = Date.parse(logDate);
@@ -104,7 +108,8 @@ export class AuditController implements CrudController<Audit> {
           logDate,
           institutionId,
           countryId,
-          loginusertype
+          loginusertype,
+          userName
         );
 
       }

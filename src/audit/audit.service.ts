@@ -137,11 +137,13 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     logDate: string,
     institutionId: number,
     countryId: number,
-    loginusertype: string
+    loginusertype: string,
+    userName: string=''
   ): Promise<Pagination<Audit>> {
     let data = this.auditCountryRepo
       .createQueryBuilder('dr')
-      .orderBy('dr.logDate', 'DESC');
+      .orderBy('dr.logDate', 'DESC')
+      .orderBy('dr.logTime', 'DESC')
     if (filterText != null && filterText != undefined && filterText != '') {
       data.andWhere('(dr.userName LIKE :filterText OR dr.actionStatus LIKE :filterText  OR dr.logDate LIKE :filterText OR dr.description LIKE :filterText  OR dr.userType LIKE :filterText )', { filterText: `%${filterText}%` })
     }
@@ -163,6 +165,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
         allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_ADMIN, UserTypesEnum.COUNTRY_USER].includes(type.code))
           .map(type => type.code);
       } else if (loginusertype === UserTypesEnum.COUNTRY_USER) {
+        data.andWhere('dr.userName = :userName', {userName: userName})
         allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_USER].includes(type.code))
           .map(type => type.code);
       } else if (loginusertype === UserTypesEnum.MASTER_ADMIN) {
@@ -183,10 +186,12 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       data.andWhere('dr.countryId = :countryId', { countryId: countryId })
     }
 
-    if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
-      data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
-    }
+    // if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
+    //   data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
+    // }
 
+    console.log(data.getQuery(), data.getParameters())
+    console.log(JSON.stringify(data.getMany()))
     let result = await paginate(data, options);
     return result;
   }
