@@ -137,7 +137,8 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     logDate: string,
     institutionId: number,
     countryId: number,
-    loginusertype: string
+    loginusertype: string,
+    userName: string=''
   ): Promise<Pagination<Audit>> {
     let data = this.auditCountryRepo
       .createQueryBuilder('dr')
@@ -164,6 +165,7 @@ export class AuditService extends TypeOrmCrudService<Audit> {
         allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_ADMIN, UserTypesEnum.COUNTRY_USER].includes(type.code))
           .map(type => type.code);
       } else if (loginusertype === UserTypesEnum.COUNTRY_USER) {
+        data.andWhere('dr.userName = :userName', {userName: userName})
         allowedTypes = UserTypes.filter(type => [UserTypesEnum.COUNTRY_USER].includes(type.code))
           .map(type => type.code);
       } else if (loginusertype === UserTypesEnum.MASTER_ADMIN) {
