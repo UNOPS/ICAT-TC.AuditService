@@ -11,7 +11,6 @@ import { Repository } from 'typeorm';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
 import { AuditCountry } from './entity/auditCountry.entity';
-import { filter } from 'rxjs';
 import { UserTypes, UserTypesEnum } from './enum/user-type.enum';
 
 @Injectable()
@@ -122,13 +121,6 @@ export class AuditService extends TypeOrmCrudService<Audit> {
     }
   }
 
-  /**
-   * 
-   *country admin -> country admin, country user
-   country user -> country user
-   external user -> external user
-   master admin -> country admin, country user, master admin
-   */
   async getAuditDetailsWithCountry(
     options: IPaginationOptions,
     filterText: string,
@@ -186,17 +178,12 @@ export class AuditService extends TypeOrmCrudService<Audit> {
       data.andWhere('dr.countryId = :countryId', { countryId: countryId })
     }
 
-    // if (loginusertype != UserTypesEnum.MASTER_ADMIN && institutionId != null && institutionId != undefined) {
-    //   data.andWhere('dr.institutionId = :institutionId', { institutionId: institutionId })
-    // }
-
     console.log(data.getQuery(), data.getParameters())
     console.log(JSON.stringify(data.getMany()))
     let result = await paginate(data, options);
     return result;
   }
 
-  /**Not using function */
   async getAuditDetailsCountry(
     options: IPaginationOptions,
     filterText: string,

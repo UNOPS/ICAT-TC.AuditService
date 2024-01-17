@@ -1,11 +1,6 @@
 import { ErrorlogService } from './errorlog.service';
-import { CreateErrorlogDto } from './dto/create-errorlog.dto';
 import { UpdateErrorlogDto } from './dto/update-errorlog.dto';
-
-import { TypeOrmCrudService } from '@nestjsx/crud-typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query,Request } from '@nestjs/common';
-import { Crud } from '@nestjsx/crud';
+import { Controller, Get, Post, Body, Patch, Param, Delete, } from '@nestjs/common';
 import {Errorlog} from './entities/errorlog.entity';
 
 @Controller('errorlog')

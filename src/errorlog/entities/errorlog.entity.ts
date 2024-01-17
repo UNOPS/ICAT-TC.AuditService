@@ -1,6 +1,5 @@
 
-import { BaseTrackingEntity } from 'src/shared/entities/base.tracking.entity';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'errorlog' })
 export class Errorlog  {

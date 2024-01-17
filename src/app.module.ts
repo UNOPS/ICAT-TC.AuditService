@@ -5,14 +5,10 @@ import { AppService } from './app.service';
 import { AuditModule } from './audit/audit.module';
 import { Audit } from './audit/entity/audit.entity';
 import * as ormconfig from './ormconfig';
-import * as ormconfig_training from './ormconfig_training';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
-
-
-import { MailerModule } from '@nestjs-modules/mailer';
 
 import { APP_FILTER } from '@nestjs/core';
 import { HttpErrorFilter } from './shared/http-error.filter';
@@ -24,7 +20,6 @@ import { AuditCountry } from './audit/entity/auditCountry.entity';
   imports: [
     AuditModule,
     TypeOrmModule.forRoot(ormconfig),
-    TypeOrmModule.forRoot(ormconfig_training),
     TypeOrmModule.forFeature([
       Audit,
       AuditCountry

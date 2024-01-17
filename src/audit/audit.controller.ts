@@ -2,7 +2,6 @@ import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Crud, CrudController } from '@nestjsx/crud';
-import * as moment from 'moment';
 import { AuditService } from './audit.service';
 import { AuditDto } from './dto/audit-dto';
 import { Audit } from './entity/audit.entity';
@@ -59,8 +58,6 @@ export class AuditController implements CrudController<Audit> {
         
       ): Promise<any> {
       
-       var timestamp = Date.parse(logDate);
-      var dateObject = new Date(timestamp);
       
         return await this.service.getAuditDetails(
           {
