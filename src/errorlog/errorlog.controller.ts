@@ -22,7 +22,7 @@ export class ErrorlogController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.errorlogService.findOne(+id);
+    return this.errorlogService.findOne({where:{id:Number(id)}});
   }
 
   @Patch(':id')

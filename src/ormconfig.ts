@@ -4,9 +4,12 @@ const config: ConnectionOptions = {
   host: process.env.DATABASE_HOST,
   socketPath: process.env.SOCKET_PATH,
   port: Number(process.env.DATABASE_PORT),
-  username: process.env.DATABASE_USER,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,  
+  // username: process.env.DATABASE_USER,
+  // password: process.env.DATABASE_PASSWORD,
+  // database: process.env.DATABASE_NAME,  
+  username : 'root',
+  password : '1997',
+  database: 'icat_pmu',
   entities: [__dirname + '/**/*.entity{.ts,.js}'], 
 
   synchronize: true,
@@ -15,9 +18,9 @@ const config: ConnectionOptions = {
   logger: 'file',
 
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-  cli: {
-    migrationsDir: 'src/migrations',
-  },
+  // cli: {
+  //   migrationsDir: 'src/migrations',
+  // },
 };
 
 export = config;
