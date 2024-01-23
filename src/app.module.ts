@@ -18,6 +18,9 @@ import { AuditCountry } from './audit/entity/auditCountry.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,  
+    }),
     AuditModule,
     TypeOrmModule.forRoot(
       {
